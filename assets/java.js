@@ -74,15 +74,18 @@ var database = firebase.database();
     // Prettify the train start
     
     var now = moment();
+    // 17:24 today
     var nextTrainMoment = moment(trStart, "hh:mm A");
+    // 06:00 am
     while(nextTrainMoment.isBefore(now)){
+        
         nextTrainMoment.add(trFrequency, 'm');
     }
     var nextTrain = nextTrainMoment.format("hh:mm A");
     console.log(nextTrain);
    
-    var minAway = moment().diff(moment(nextTrain, "hh:mm A"), "m");
-    minAway *= -1;
+    var minAway = moment(nextTrain, "hh:mm A").diff(moment(), "m");
+
     console.log(minAway);
 
     
