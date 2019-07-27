@@ -55,5 +55,52 @@ var database = firebase.database();
   });
   
   
+  // 3. Create Firebase event for adding a train to the database and a row in the html when a user adds an entry
+  database.ref().on("child_added", function(childSnapshot) {
+    console.log(childSnapshot.val());
   
+    // Store everything into a variable.
+    var trName = childSnapshot.val().name;
+    var trDestination = childSnapshot.val().destination;
+    var trStart = childSnapshot.val().start;
+    var trFrequency = childSnapshot.val().frequency;
+  
+    // Employee Info
+    console.log(trName);
+    console.log(trDestination);
+    console.log(trStart);
+    console.log(trFrequency);
+  
+    // Prettify the train start
+    
+    var now = moment();
+    var nextTrainMoment = moment(trStart, "hh:mm A");
+    while(nextTrainMoment.isBefore(now)){
+        nextTrainMoment.add(trFrequency, 'm');
+    }
+    var nextTrain = nextTrainMoment.format("hh:mm A");
+    console.log(nextTrain);
+   
+    var minAway = moment().diff(moment(nextTrain, "hh:mm A"), "m");
+    minAway *= -1;
+    console.log(minAway);
+
+    
+  
+   
+  
+    // Create the new row
+    var newRow = $("<tr>").append(
+      $("<td>").text(trName),
+      $("<td>").text(trDestination),
+      $("<td>").text(trFrequency),
+
+      $("<td>").text(nextTrain),
+      $("<td>").text(minAway),
+     
+    );
+  
+    // Append the new row to the table
+    $("#train-table > tbody").append(newRow);
+  });
   
